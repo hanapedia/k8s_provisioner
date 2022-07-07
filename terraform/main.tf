@@ -5,9 +5,9 @@ provider "libvirt" {
 resource "libvirt_network" "ubuntu_network" {
   name = "ubuntu"
   mode = "nat"
-  dhcp {
-    enabled = true
-  }
+  # dhcp {
+  #   enabled = true
+  # }
   addresses = ["192.168.100.0/24"]
   autostart = true
 }

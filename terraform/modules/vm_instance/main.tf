@@ -6,9 +6,10 @@ resource "libvirt_volume" "ubuntu_qcow2" {
 }
 
 resource "libvirt_domain" "ubuntu_domain" {
-  name   = var.vm_name
-  memory = "4096"
-  vcpu   = 2
+  name      = var.vm_name
+  memory    = "4096"
+  vcpu      = 2
+  autostart = true
 
   cloudinit = var.cloudinit_disk_id
 
