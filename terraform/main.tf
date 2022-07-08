@@ -10,6 +10,11 @@ resource "libvirt_network" "ubuntu_network" {
   # }
   addresses = ["192.168.100.0/24"]
   autostart = true
+  dns {
+    forwarders {
+      address = "8.8.8.8"
+    }
+  }
 }
 
 resource "libvirt_pool" "ubuntu_pool" {

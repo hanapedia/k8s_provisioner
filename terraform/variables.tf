@@ -11,6 +11,7 @@ variable "ubuntu_22_img_url" {
 variable "num_vm_instances" {
   description = "number of vm instances"
   type        = number
+  default     = 2
 
   validation {
     condition     = var.num_vm_instances < 4
