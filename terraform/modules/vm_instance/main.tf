@@ -1,8 +1,9 @@
 resource "libvirt_volume" "ubuntu_qcow2" {
-  name   = var.vm_name
-  pool   = var.pool_name
-  source = var.img_url
-  format = "qcow2"
+  name           = var.vm_name
+  pool           = var.pool_name
+  base_volume_id = var.base_img_id
+  size           = "8000000000"
+  format         = "qcow2"
 }
 
 resource "libvirt_domain" "ubuntu_domain" {

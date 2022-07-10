@@ -1,8 +1,8 @@
 #cloud-config
 timezone: Asia/Tokyo  
-ssh_pwauth: true
+ssh_pwauth: false
 chpasswd:
-  expire: true
+  expire: false
   list: root:password
 users:
   - name: ubuntu
@@ -17,6 +17,11 @@ users:
       - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDMrBQUa4iADNPo3q/AQjpQyt1GFsdYKEW9Hd8kC478o3G4UbpuempbF/TlLixp/5tusMQjV9n/8kMJF1kj4lrsFHShftd7+ZXvUKkny8vEOF7aj79j3V9nYFPJ4NFIuJdzPsdfBG51DaT3wbossCEZshfNMc9iBISSLbSwDi6rwxCZX75GvQlMOR5TZSOXe7exj/28QSkyI9hcCbnbK0JG6Kabcxh1ZFAX/BwxDv/ywShWNbM2Y66KbO0BcjQjRPPgEIE05nW7C5Q0K5XJ5DAWHFzdACQakkRUuWXFrNS7ptZSIBY5BKryc0jq0JJinnmoAkMuEKCwUBIVa+5C4EokAM+ICTTaf6kWzWeraueZ4czFUdS5F7R6G/YNP6yTwmx2Y07lLt3m9EijxM8VTDgYsSS2R4yP8KGC1cof7W/Ia+8ZYdPR8Yg/QwfV+OP4CQELaIG1YvZldMJ1KUUsrkFNZ9cNbVtQIL2VLhw/P+PtOBlKgpESE+NvYDG7+3cImTk= hiroki11hanada@gmail.com"
     # ssh_import_id:
     #   - gh:hanapedia
+growpart:
+  ignore_growroot_disabled: false
+  mode: auto
+  devices: 
+    - "/"
 final_message: "The system is up and running"
 
  

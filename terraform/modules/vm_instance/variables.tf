@@ -8,9 +8,9 @@ variable "pool_name" {
   type        = string
 }
 
-variable "img_url" {
-  description = "ubuntu 22.04 image"
-  default     = "https://cloud-images.ubuntu.com/releases/jammy/release-20220622/ubuntu-22.04-server-cloudimg-amd64.img"
+variable "base_img_id" {
+  description = "ubuntu 22.04 base image"
+  type        = string
 }
 
 variable "cloudinit_disk_id" {
