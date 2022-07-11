@@ -1,0 +1,13 @@
+# vim: set filetype=yaml.ansible :
+---
+- name: Apply terraform configuration
+  community.general.terraform:
+    project_path: '../terraform/'
+    state: present
+  register: output
+
+- name: Copy inventory file to ansible
+  ansible.builtin.copy:
+    src: '../terraform/inventory'
+    dest: './'
+    mode: '0644'

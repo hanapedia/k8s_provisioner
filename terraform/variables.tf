@@ -6,7 +6,7 @@ variable "ubuntu_22_img_url" {
 variable "num_control_plane" {
   description = "number of control planes"
   type        = number
-  default     = 1
+  default     = 3
 
   validation {
     condition     = var.num_control_plane < 5
@@ -17,7 +17,7 @@ variable "num_control_plane" {
 variable "num_node" {
   description = "number of node"
   type        = number
-  default     = 1
+  default     = 3
 
   validation {
     condition     = var.num_node < 5

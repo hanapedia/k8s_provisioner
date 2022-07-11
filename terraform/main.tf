@@ -33,7 +33,7 @@ resource "libvirt_volume" "ubuntu_base_img" {
 resource "libvirt_cloudinit_disk" "commoninit" {
   name      = "commoninit.iso"
   pool      = libvirt_pool.k8s_pool.name
-  user_data = templatefile("${path.module}/config/cloud_init.yaml", {})
+  user_data = templatefile("${path.module}/configs/cloud_init.yaml", {})
   # network_config = templatefile("${path.module}/config/network_config.yaml", {})
 }
 
@@ -59,6 +59,15 @@ module "node" {
   cloudinit_disk_id         = libvirt_cloudinit_disk.commoninit.id
   network_id                = libvirt_network.k8s_network.id
   network_interface_address = ["192.168.100.${count.index + 10}"]
+}
+
+resource "local_file" "ansible_inventory" {
+  content = templatefile("${path.module}/templates/inventory.tftpl",
+    {
+      control_plane_ips = module.control_plane.*.ip
+      node_ips          = module.node.*.ip
+  })
+  filename = "inventory"
 }
 
 output "ip_control_plane" {

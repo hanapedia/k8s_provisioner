@@ -39,5 +39,5 @@ resource "libvirt_domain" "ubuntu_domain" {
 }
 
 output "ip" {
-  value = libvirt_domain.ubuntu_domain.*.network_interface.0.addresses
+  value = libvirt_domain.ubuntu_domain.network_interface.0.addresses
 }
