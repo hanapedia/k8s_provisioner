@@ -1,0 +1,33 @@
+# vim: set filetype=yaml.ansible :
+---
+- name: Apply terraform configuration
+  community.general.terraform:
+    project_path: '../terraform/libvirt_vms'
+    state: absent
+    variables:
+      libvirt_uri: "{{ libvirt.uri }}"
+      domain: "{{ libvirt.network.domain }}"
+      cluster_name: "{{ k8s.cluster_name }}"
+      ubuntu_22_img_url: "{{ libvirt.ubuntu_base_img_url }}"
+      ssh_keys: "{{ ssh_keys | to_json }}"
+      num_control_plane: "{{ k8s.control_plane.vms }}"
+      disk_size_cp: "{{ k8s.control_plane.disk }}"
+      memory_cp: "{{ k8s.control_plane.mem }}"
+      cpu_cp: "{{ k8s.control_plane.cpu }}"
+      num_node: "{{ k8s.node.vms }}"
+      disk_size_n: "{{ k8s.node.disk }}"
+      memory_n: "{{ k8s.node.mem }}"
+      cpu_n: "{{ k8s.node.cpu }}"
+  register: output
+
+- name: Clear inventory file in terraform directory
+  ansible.builtin.copy:
+    src: '/dev/null'
+    dest: '../terraform/files/inventory'
+    mode: '0644'
+
+- name: Clear inventory file in ansible directory
+  ansible.builtin.copy:
+    src: '/dev/null'
+    dest: './files/inventory'
+    mode: '0644'

@@ -1,0 +1,17 @@
+# vim: set filetype=yaml.ansible :
+os_packages:
+  - unzip
+  - git
+  - gcc
+  - make
+  - network-manager
+  - python3-lxml
+  - python3-netaddr
+  - python3-libvirt
+  - python3-pip
+  - libvirt-daemon-system
+  - libvirt-clients
+  - libvirt-dev
+  - bridge-utils
+  - qemu-kvm
+  - virtinst
