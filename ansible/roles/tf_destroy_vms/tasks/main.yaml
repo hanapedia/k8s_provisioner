@@ -23,7 +23,7 @@
 - name: Clear vms_inventory file
   ansible.builtin.copy:
     src: '/dev/null'
-    dest: "{{ playbook_fir }}/inventories/vms_inventory.yaml"
+    dest: "{{ playbook_dir }}/inventories/vms_inventory.yaml"
     mode: '0644'
 
 # Deprecated since inventory file generation is handled in another task
