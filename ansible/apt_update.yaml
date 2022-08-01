@@ -1,7 +1,0 @@
-# vim: set filetype=yaml.ansible :
----
-- hosts: control_planes, nodes
-  gather_facts: false
-  become: true
-  roles:
-    - install_tools

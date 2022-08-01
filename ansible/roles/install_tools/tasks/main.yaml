@@ -4,6 +4,6 @@
     update_cache: true
     upgrade: safe
 
-# - name: Install required packages
-#   ansible.builtin.apt:
-#     name: "{{ os_packages }}"
+- name: Install required packages
+  ansible.builtin.apt:
+    name: "{{ os_packages }}"

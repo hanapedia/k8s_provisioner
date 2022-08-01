@@ -45,16 +45,14 @@ module "node" {
   cpu          = var.cpu_n
 }
 
-# Inventory file ganeration with raw ip
-# deprecated since inventory file generation is handled from ansible with hostname
-# resource "local_file" "ansible_inventory" {
-#   content = templatefile("${path.module}/templates/inventory.tftpl",
-#     {
-#       control_plane_ips = flatten(module.control_plane.*.ip)
-#       node_ips          = flatten(module.node.*.ip)
-#   })
-#   filename = "../files/inventory"
-# }
+resource "local_file" "ansible_inventory" {
+  content = templatefile("${path.module}/templates/inventory.tftpl",
+    {
+      control_plane_ips = flatten(module.control_plane.*.ip)
+      node_ips          = flatten(module.node.*.ip)
+  })
+  filename = "../files/inventory"
+}
 
 output "ip_control_plane" {
   value = module.control_plane.*.ip
