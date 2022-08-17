@@ -83,3 +83,18 @@ variable "cpu_n" {
   type = number
 }
 
+variable "disk_size_lb" {
+  description = "disk size for loadbalancer vm"
+  type = number
+}
+
+variable "memory_lb" {
+  description = "memory for loadbalancer vm"
+  type = number
+}
+
+variable "cpu_lb" {
+  description = "cpus for loadbalancer vm"
+  type = number
+}
+

@@ -45,6 +45,19 @@ module "node" {
   cpu          = var.cpu_n
 }
 
+module "loadbalancer" {
+  source = "./modules/vm_instance"
+
+  vm_name      = "loadbalancer"
+  cluster_name = var.cluster_name
+  base_img_id  = libvirt_volume.ubuntu_base_img.id
+  domain       = var.domain
+  ssh_keys     = var.ssh_keys
+  disk_size    = var.disk_size_lb
+  memory       = var.memory_lb
+  cpu          = var.cpu_lb
+}
+
 # Inventory file ganeration with raw ip
 # deprecated since inventory file generation is handled from ansible with hostname
 # resource "local_file" "ansible_inventory" {

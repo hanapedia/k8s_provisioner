@@ -16,8 +16,22 @@ k8s:
   node:
     cpu: 2
     mem: 4
-    vms: 3
+    vms: 4
     disk: 8
+  
+  loadbalancer:
+    cpu: 1 
+    mem: 4 
+    vms: 1 
+    disk: 8 
+    setup: 
+      packages:
+        - haproxy
+      services:
+        - https
+        - http 
+      internal_zone_port: 
+        - "6443/tcp"
 
 libvirt: 
   uri: "qemu+ssh://hanapedia@ubuntuhome/system"
