@@ -27,11 +27,22 @@ k8s:
     setup: 
       packages:
         - haproxy
+        - firewalld
+        - network-manager
       services:
         - https
         - http 
-      internal_zone_port: 
+      ports: 
         - "6443/tcp"
+
+  ubuntu:
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    repo_file: /etc/apt/sources.list.d/kubernetes.list
+    repo_key: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    packages:
+      - kubelet
+      - kubeadm
+      - kubectl
 
 libvirt: 
   uri: "qemu+ssh://hanapedia@ubuntuhome/system"

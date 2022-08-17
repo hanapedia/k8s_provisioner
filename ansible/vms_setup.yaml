@@ -1,0 +1,18 @@
+# vim: set filetype=yaml.ansible :
+---
+- hosts: control_planes, nodes, loadbalancer
+  gather_facts: false
+  become: true
+  roles:
+    - common_setup
+
+- hosts: loadbalancer
+  become: true
+  roles:
+    - setup_lb
+
+- hosts: control_planes, nodes
+  become: true
+  roles:
+    - install_containerd
+    - install_kube

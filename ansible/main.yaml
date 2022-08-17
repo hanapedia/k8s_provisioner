@@ -2,4 +2,4 @@
 - import_playbook: network.yaml
 - import_playbook: kvms.yaml
 - import_playbook: healthcheck.yaml
-- import_playbook: apt_update.yaml
+- import_playbook: vms_setup.yaml
