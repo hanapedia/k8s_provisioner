@@ -1,0 +1,77 @@
+# vim: set filetype=yaml.ansible :
+---
+- name: Install packages
+  ansible.builtin.apt:
+    name: "{{ k8s.loadbalancer.setup.packages }}"
+    state: present
+
+- name: Ensure firewalld, haproxy, and NM are enabled
+  ansible.builtin.service:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  loop:
+    - firewalld
+    - haproxy
+    - NetworkManager
+
+- name: Stop NetworkManager
+  ansible.builtin.service:
+    name: NetworkManager
+    state: stopped
+
+- name: Add interface to firewalld's internal zone
+  ansible.posix.firewalld:
+    zone: internal
+    interface: ens3
+    permanent: true
+    state: enabled
+
+- name: Start NetworkManager
+  ansible.builtin.service:
+    name: NetworkManager
+    state: started
+    enabled: true
+
+- name: Allow services for internal zone
+  ansible.posix.firewalld:
+    zone: internal
+    state: enabled
+    permanent: true
+    service: "{{ item }}"
+  loop: "{{ k8s.loadbalancer.setup.services }}"
+
+- name: Allow ports for internal zone
+  ansible.posix.firewalld:
+    zone: internal
+    state: enabled
+    permanent: true
+    port: "{{ item }}"
+  loop: "{{ k8s.loadbalancer.setup.ports }}"
+
+- name: Restart firewalld
+  ansible.builtin.service:
+    name: firewalld
+    state: restarted
+    enabled: true
+
+# - name: debug
+#   ansible.builtin.debug:
+#     msg: "{{ hostvars[item]['ansible_facts'] }}"
+#   with_inventory_hostnames:
+#     - control_planes
+
+- name: Create haproxy config
+  ansible.builtin.template:
+    src: haproxy.j2
+    dest: /etc/haproxy/haproxy.cfg
+    mode: "1777"
+
+- name: Restart haproxy
+  ansible.builtin.service:
+    name: haproxy
+    state: restarted
+    enabled: true
+
+- name: Reboot loadbalancer
+  ansible.builtin.reboot:

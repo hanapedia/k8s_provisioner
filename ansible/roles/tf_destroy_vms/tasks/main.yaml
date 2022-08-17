@@ -18,6 +18,9 @@
       disk_size_n: "{{ k8s.node.disk }}"
       memory_n: "{{ k8s.node.mem }}"
       cpu_n: "{{ k8s.node.cpu }}"
+      disk_size_lb: "{{ k8s.loadbalancer.disk }}"
+      memory_lb: "{{ k8s.loadbalancer.mem }}"
+      cpu_lb: "{{ k8s.loadbalancer.cpu }}"
   register: output
 
 - name: Clear vms_inventory file

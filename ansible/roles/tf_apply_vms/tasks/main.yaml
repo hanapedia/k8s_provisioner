@@ -22,37 +22,3 @@
       memory_lb: "{{ k8s.loadbalancer.mem }}"
       cpu_lb: "{{ k8s.loadbalancer.cpu }}"
   register: output
-
-# adding vms to inventory by their ip addresses
-# - name: Copy inventory file to ansible
-#   ansible.builtin.copy:
-#     src: '../terraform/files/inventory'
-#     dest: './files/inventory'
-#     mode: '0644'
-
-# Adding vms to inventory by their local domain name
-# Deprecated since inventory generation is handled in another task
-# control planes
-# - name: Add control planes to given group
-#   ansible.builtin.add_host:
-#     hostname: "cp{{ item }}.{{ libvirt.network.domain }}"
-#     ansible_user: ubuntu
-#     ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q {{ vm_host.domain }}"'
-#     groups:
-#       - "control_planes"
-#     group_children:
-#       - "k8s_nodes"
-#   loop: "{{ range(0, k8s.control_plane.vms) | list }}"
-#   delegate_to: localhost
-# # nodes
-# - name: Add nodes to given group
-#   ansible.builtin.add_host:
-#     hostname: "node{{ item }}.{{ libvirt.network.domain }}"
-#     ansible_user: ubuntu
-#     ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q {{ vm_host.domain }}"'
-#     groups:
-#       - "nodes"
-#     group_children:
-#       - "k8s_nodes"
-#   loop: "{{ range(0, k8s.node.vms) | list }}"
-#   delegate_to: localhost

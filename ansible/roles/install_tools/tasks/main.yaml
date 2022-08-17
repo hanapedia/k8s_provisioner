@@ -1,9 +1,0 @@
-# vim: set filetype=yaml.ansible :
-- name: Update all packages
-  ansible.builtin.apt:
-    update_cache: true
-    upgrade: safe
-
-# - name: Install required packages
-#   ansible.builtin.apt:
-#     name: "{{ os_packages }}"
