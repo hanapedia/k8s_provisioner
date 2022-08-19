@@ -45,9 +45,12 @@ resource "libvirt_network" "k8s_network" {
   dns {
     enabled    = true
     local_only = true
-    #   forwarders {
-    #     address = "8.8.8.8"
-    #   }
+    forwarders {
+      address = "8.8.8.8"
+    }
+    forwarders {
+      address = "8.8.4.4"
+    }
   }
   dnsmasq_options {
     options {

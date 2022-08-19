@@ -1,0 +1,134 @@
+# vim: set filetype=yaml.ansible :
+- name: Prepare prerequisites
+  block:
+    - name: Add prerequisite modules to autostart
+      ansible.builtin.blockinfile:
+        path: /etc/modules-load.d/k8s.conf
+        block: |
+          overlay
+          br_netfilter
+        create: true
+        mode: '1777'
+
+    - name: Enable prerequisite modules
+      community.general.modprobe:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - br_netfilter
+        - overlay
+
+    - name: Enable sysctl values
+      ansible.posix.sysctl:
+        name: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: present
+        reload: true
+        sysctl_set: true
+      loop:
+        - key: net.ipv4.ip_forward
+          value: 1
+        - key: net.bridge.bridge-nf-call-ip6tables
+          value: 1
+        - key: net.bridge.bridge-nf-call-iptables
+          value: 1
+
+
+- name: Install and Configure containerd
+  block:
+    - name: Install containerd
+      ansible.builtin.apt:
+        name: containerd
+        state: present
+
+    - name: Create /etc/containerd
+      ansible.builtin.file:
+        state: directory
+        path: /etc/containerd
+        mode: '1777'
+
+    - name: Initialize config
+      ansible.builtin.shell: containerd config default > /etc/containerd/config.toml
+      changed_when: true
+
+    - name: Force systemd to reread configs
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: Ensure containerd is enabled and started
+      ansible.builtin.systemd:
+        name: containerd
+        state: restarted
+        enabled: true
+  when: k8s.cri == 'containerd'
+
+- name: Install and configure cri-o
+  block:
+    - name: Add crio repo key
+      ansible.builtin.apt_key:
+        url: "{{ item.key }}"
+        keyring: "{{ item.keyring }}"
+        state: present
+      loop:
+        - key: "{{ k8s.crio.libcontainers_key }}"
+          keyring: "{{ k8s.crio.libcontainers_keyring }}"
+        - key: "{{ k8s.crio.crio_key }}"
+          keyring: "{{ k8s.crio.crio_keyring }}"
+
+    - name: Ensure the presence of apt-repo for cri-o
+      ansible.builtin.apt_repository:
+        repo: "{{ item.repo }}"
+        filename: "{{ item.file }}"
+        state: present
+      loop:
+        - repo: "{{ k8s.crio.libcontainers_repo }}"
+          file: /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+        - repo: "{{ k8s.crio.crio_repo }}"
+          file: /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:1.24.list
+
+    - name: Temporary fix for memory swap slices on 20.04
+      ansible.builtin.lineinfile:
+        path: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX'
+        line: 'GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"'
+
+    - name: Ensure cri-o is installed - Ubuntu
+      ansible.builtin.apt:
+        name:
+          - cri-o
+          - cri-o-runc
+        state: present
+
+    - name: Fire crio-conf template
+      ansible.builtin.template:
+        src: crio.conf.j2
+        dest: /etc/crio/crio.conf
+        mode: '1777'
+
+    - name: Fire crio-conf template
+      ansible.builtin.template:
+        src: crio.conf.crun.j2
+        dest: /etc/crio/crio.conf.d/01-crio-runc.conf
+        mode: '1777'
+
+    - name: Remove example CNI configs
+      ansible.builtin.file:
+        path: "/etc/cni/net.d/{{ item }}"
+        state: absent
+      loop:
+        - 100-crio-bridge.conf
+        - 200-loopback.conf
+
+    - name: Force systemd to reread configs
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: Ensure cri-o is enabled and started
+      ansible.builtin.systemd:
+        name: crio
+        state: started
+        enabled: true
+  when: k8s.cri == 'crio'
+
+- name: reboot cp and nodes
+  ansible.builtin.reboot:
