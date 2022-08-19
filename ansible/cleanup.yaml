@@ -1,0 +1,3 @@
+# vim: set filetype=yaml.ansible :
+- import_playbook: kvms_destroy.yaml
+- import_playbook: network_destroy.yaml

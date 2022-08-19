@@ -1,0 +1,16 @@
+# vim: set filetype=yaml.ansible :
+---
+- name: Remove systemd-resolved config directory
+  ansible.builtin.file:
+    path: /etc/systemd/resolved.conf.d
+    state: absent
+
+- name: Remove NetworkManager config directory
+  ansible.builtin.file:
+    path: /etc/NetworkManager/conf.d
+    state: absent
+
+- name: Remove NetworkManager dnsmasq config directory
+  ansible.builtin.file:
+    path: /etc/NetworkManager/dnsmasq.d
+    state: absent

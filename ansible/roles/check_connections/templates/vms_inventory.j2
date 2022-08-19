@@ -1,0 +1,19 @@
+all:
+  children:
+    control_planes:
+      hosts:
+        cp[1:{{ k8s.control_plane.vms }}].{{ libvirt.network.domain }}:
+          ansible_user: ubuntu
+          ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q {{ vm_host.domain }}"'
+        
+    nodes:
+      hosts:
+        node[1:{{ k8s.control_plane.vms }}].{{ libvirt.network.domain }}:
+          ansible_user: ubuntu
+          ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q {{ vm_host.domain }}"'
+
+    loadbalancer:
+      hosts:
+        loadbalancer.{{ libvirt.network.domain }}:
+          ansible_user: ubuntu
+          ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q {{ vm_host.domain }}"'

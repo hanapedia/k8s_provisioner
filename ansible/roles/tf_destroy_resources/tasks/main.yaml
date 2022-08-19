@@ -1,0 +1,12 @@
+# vim: set filetype=yaml.ansible :
+---
+- name: Apply terraform configuration
+  community.general.terraform:
+    project_path: '../terraform/libvirt_resources'
+    state: absent
+    variables:
+      libvirt_uri: "{{ libvirt.uri }}"
+      cluster_name: "{{ k8s.cluster_name }}"
+      domain: "{{ libvirt.network.domain }}"
+      network_cidr: "{{ libvirt.network.network_cidr | to_json }}"
+  register: output
