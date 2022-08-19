@@ -69,6 +69,7 @@ k8s:
 
 libvirt: 
   uri: "qemu+ssh://hanapedia@ubuntuhome/system"
+  uri_local: "qemu+ssh:///system"
   # ubuntu_base_img_url: "https://cloud-images.ubuntu.com/releases/jammy/release-20220622/ubuntu-22.04-server-cloudimg-amd64.img"
   ubuntu_base_img_url: "https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64-disk-kvm.img"
   network:
