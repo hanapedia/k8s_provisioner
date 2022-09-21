@@ -1,0 +1,5 @@
+# vim: set filetype=yaml.ansible :
+- import_playbook: create_vms.yaml
+- import_playbook: vms_setup.yaml
+- import_playbook: cluster_init.yaml
+- import_playbook: install_calico.yaml

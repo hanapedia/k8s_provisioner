@@ -1,0 +1,7 @@
+# vim: set filetype=yaml.ansible :
+---
+- hosts: vm_host
+  name: Install Calico cni
+  become: true
+  roles:
+    - apply_calico

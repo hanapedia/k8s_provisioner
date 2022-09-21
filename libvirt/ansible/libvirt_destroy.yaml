@@ -1,0 +1,11 @@
+# vim: set filetype=yaml.ansible :
+---
+- hosts: 127.0.0.1
+  connection: local
+  roles:
+    - libvirt_destroy
+
+- hosts: vm_host
+  become: true
+  roles:
+    - dnsmasq_destroy

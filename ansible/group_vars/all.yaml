@@ -1,7 +1,26 @@
 # vm host variables
 vm_host:
   domain: HomeLan
+  # domain: HomeWan
   user: hanapedia
+
+addresses:
+  - ip: 192.168.1.200	
+    mac: 00:00:c0:a8:01:c8		
+  - ip: 192.168.1.201	
+    mac: 00:00:c0:a8:01:c9		
+  - ip: 192.168.1.202	
+    mac: 00:00:c0:a8:01:ca		
+  - ip: 192.168.1.203	
+    mac: 00:00:c0:a8:01:cb		
+  - ip: 192.168.1.204	
+    mac: 00:00:c0:a8:01:cc		
+  - ip: 192.168.1.205	
+    mac: 00:00:c0:a8:01:cd		
+  - ip: 192.168.1.206	
+    mac: 00:00:c0:a8:01:ce		
+  - ip: 192.168.1.207	
+    mac: 00:00:c0:a8:01:cf		
 
 # k8s varibales
 k8s:
@@ -10,14 +29,14 @@ k8s:
   control_plane:
     cpu: 2
     mem: 4
-    vms: 3
-    disk: 8
+    vms: 2
+    disk: 16
 
   node:
     cpu: 2
-    mem: 4
-    vms: 4
-    disk: 8
+    mem: 8
+    vms: 3
+    disk: 24
   
   loadbalancer:
     cpu: 1 

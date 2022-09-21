@@ -1,0 +1,31 @@
+# vim: set filetype=yaml.ansible :
+---
+- name: Ensure that terraform directory with right version exists
+  ansible.builtin.file:
+    path: "../terraform/libvirt-{{ libvirt.version }}"
+    state: directory
+    mode: '1777'
+
+- name: Copy terraform files to directory
+  ansible.builtin.copy:
+    src: "./files/terraform/main.tf"
+    dest: "../terraform/libvirt-{{ libvirt.version }}/main.tf"
+    mode: '1777'
+
+- name: Initialize terraform
+  ansible.builtin.command:
+    cmd: terraform init
+    chdir: "../terraform/libvirt-{{ libvirt.version }}"
+  changed_when: true
+
+- name: Apply terraform configuration
+  community.general.terraform:
+    project_path: "../terraform/libvirt-{{ libvirt.version }}"
+    state: present
+    variables:
+      libvirt_uri: "{{ libvirt.uri }}"
+      resource_version: "{{ libvirt.version }}"
+      namespace: "{{ libvirt.namespace }}"
+      domain: "{{ libvirt.network.domain }}"
+      network_cidr: "{{ libvirt.network.network_cidr | to_json }}"
+  register: output

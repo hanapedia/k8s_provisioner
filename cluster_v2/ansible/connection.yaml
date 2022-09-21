@@ -1,0 +1,18 @@
+# vim: set filetype=yaml.ansible :
+---
+- name: ssh port foreward kubernetes api endpoint
+  hosts: localhost
+  tasks:
+    - name: SSH port foreward
+      changed_when: false
+      vars:
+        localport: "{{ item[1] }}"
+        vm_hostname: "{{ item[0] }}"
+        vm_port: "{{ item[1] }}"
+      ansible.builtin.command: "ssh -o ProxyCommand='ssh -W %h:%p -q {{ vm_host.domain }}' \
+                                -fNL {{ localport }}:{{ vm_hostname }}.{{ libvirt.network.domain }}:{{ vm_port }} \
+                                {{ k8s.ubuntu.user }}@{{ vm_hostname }}.{{ libvirt.network.domain }}"
+      loop: # "{{ ['node1', 'loadbalancer'] | product(['32001', '6443']) | list }}"
+        - "{{ ['node3-k8s-v2', '31300'] }}"
+        - "{{ ['node1-k8s-v2', '31090'] }}"
+        - "{{ ['loadbalancer-k8s-v2', '6443'] }}"

@@ -1,0 +1,6 @@
+# vim: set filetype=yaml.ansible :
+---
+- hosts: 127.0.0.1
+  connection: local
+  roles:
+    - tf_apply_vms

@@ -63,7 +63,7 @@ variable "num_node" {
   # default     = 3
 
   validation {
-    condition     = var.num_node < 5
+    condition     = var.num_node < 10
     error_message = "The number of instances must be smaller than 5"
   }
 }
