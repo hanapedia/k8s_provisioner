@@ -1,0 +1,15 @@
+# vim: set filetype=yaml.ansible :
+---
+- name: Connect cluster to kubectl on vm host
+  block:
+    - name: Ensure that .kube directory exits
+      ansible.builtin.file:
+        path: "/home/{{ vm_host.user }}/.kube"
+        state: directory
+        mode: '1777'
+
+    - name: Save kubeconfig as file
+      ansible.builtin.copy:
+        content: "{{ hostvars[groups['control_planes'][0]]['kube_config'] }}"
+        dest: "/home/{{ vm_host.user }}/.kube/config"
+        mode: '1777'

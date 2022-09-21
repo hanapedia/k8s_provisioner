@@ -1,0 +1,43 @@
+# vim: set filetype=yaml.ansible :
+---
+- name: Ensure that terraform directory for the cluster exists
+  ansible.builtin.file:
+    path: "../terraform/kvm-{{ k8s.cluster_name }}"
+    state: directory
+    mode: '1777'
+
+- name: Copy terraform files to directory
+  ansible.builtin.copy:
+    src: "./files/terraform/"
+    dest: "../terraform/kvm-{{ k8s.cluster_name }}/"
+    mode: '1777'
+
+- name: Initialize terraform
+  ansible.builtin.command:
+    cmd: terraform init
+    chdir: "../terraform/kvm-{{ k8s.cluster_name }}"
+  changed_when: true
+
+- name: Apply terraform configuration
+  community.general.terraform:
+    project_path: "../terraform/kvm-{{ k8s.cluster_name }}"
+    state: present
+    variables:
+      libvirt_uri: "{{ libvirt.uri }}"
+      domain: "{{ libvirt.resources.network.domain }}"
+      cluster_name: "{{ k8s.cluster_name }}"
+      versioned_namespace: "{{ libvirt.resources.namespace }}-{{ libvirt.resources.version }}"
+      ubuntu_22_img_url: "{{ libvirt.ubuntu_base_img_url }}"
+      ssh_keys: "{{ ssh_keys | to_json }}"
+      num_control_plane: "{{ k8s.control_plane.vms }}"
+      disk_size_cp: "{{ k8s.control_plane.disk }}"
+      memory_cp: "{{ k8s.control_plane.mem }}"
+      cpu_cp: "{{ k8s.control_plane.cpu }}"
+      num_node: "{{ k8s.node.vms }}"
+      disk_size_n: "{{ k8s.node.disk }}"
+      memory_n: "{{ k8s.node.mem }}"
+      cpu_n: "{{ k8s.node.cpu }}"
+      disk_size_lb: "{{ k8s.loadbalancer.disk }}"
+      memory_lb: "{{ k8s.loadbalancer.mem }}"
+      cpu_lb: "{{ k8s.loadbalancer.cpu }}"
+  register: output

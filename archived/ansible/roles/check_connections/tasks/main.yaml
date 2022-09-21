@@ -1,0 +1,15 @@
+# vim: set filetype=yaml.ansible :
+---
+- name: Ensure that vms_inventory.yaml exits
+  ansible.builtin.file:
+    path: "{{ playbook_dir }}/inventories/vms_inventory.yaml"
+    state: file
+    mode: '1777'
+
+- name: Generate inventory file for the vms from the template
+  ansible.builtin.template:
+    src: vms_inventory.j2
+    dest: "{{ playbook_dir }}/inventories/vms_inventory.yaml"
+    mode: '1777'
+
+- meta: refresh_inventory

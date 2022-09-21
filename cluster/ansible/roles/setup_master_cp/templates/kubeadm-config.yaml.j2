@@ -1,0 +1,21 @@
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: InitConfiguration
+certificateKey: "{{ hostvars[groups['control_planes'][0]].kube_cert }}"
+bootstrapTokens:
+  - token: "{{ hostvars[groups['control_planes'][0]].kube_token }}"
+---
+kind: ClusterConfiguration
+apiVersion: kubeadm.k8s.io/v1beta3
+networking:
+  serviceSubnet: "{{ k8s.network.service_cidr }}"
+  podSubnet: "{{ k8s.network.pod_cidr }}"
+{% if k8s.control_plane.vms > 1  %}
+controlPlaneEndpoint: {{ hostvars[groups['loadbalancer'][0]].host_fqdn }}
+{% endif %}
+
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+{% if k8s.cri == 'crio' %}
+cgroupDriver: systemd
+{% endif %}

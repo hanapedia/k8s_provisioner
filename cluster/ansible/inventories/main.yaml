@@ -1,0 +1,6 @@
+all:
+  children:
+    vm_host:
+      hosts:
+        HomeLan:
+          ansible_python_interpreter: /home/hanapedia/.pyenv/shims/python

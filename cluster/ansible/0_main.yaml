@@ -1,0 +1,3 @@
+# vim: set filetype=yaml.ansible :
+- import_playbook: kvm.yaml
+- import_playbook: cluster_init.yaml

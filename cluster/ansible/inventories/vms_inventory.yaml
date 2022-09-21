@@ -1,0 +1,19 @@
+all:
+  children:
+    control_planes:
+      hosts:
+        home-cluster-cp[1:2].k8s.home:
+          ansible_user: ubuntu
+          ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q HomeLan"'
+        
+    nodes:
+      hosts:
+        home-cluster-node[1:3].k8s.home:
+          ansible_user: ubuntu
+          ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q HomeLan"'
+
+    loadbalancer:
+      hosts:
+        home-cluster-loadbalancer.k8s.home:
+          ansible_user: ubuntu
+          ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q HomeLan"'

@@ -1,4 +1,0 @@
-# vim: set filetype=yaml.ansible :
-# - import_playbook: network.yaml
-- import_playbook: kvms.yaml
-- import_playbook: healthcheck.yaml

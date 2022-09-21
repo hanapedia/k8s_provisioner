@@ -1,0 +1,27 @@
+#cloud-config
+timezone: Asia/Tokyo  
+ssh_pwauth: false
+chpasswd:
+  expire: false
+  list: root:password
+users:
+  - name: ubuntu
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups:
+      - users
+      - admin
+    shell: /bin/bash
+    lock_passwd: false
+    ssh_authorized_keys:
+      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCVDhT/P9zxI4ypW39uNYbkcl5kadudwPcJDdnCK1s5oURgNlmPpRtHP3l2Bfp2v4kd35PyQGXWA9xlK+oud5sILV04R1I0/lmr2p6HPO9lfhFuHxm+irXiJdkCdv9ymw7jrYSQPQy/Wv29pwSEVgha2OZnyUh7jsPw1XGVlv4ZjJxkYa/fRm2ERikz/2Qg7vCVRUoz8kAqVRgp+Ra5wR4WMY8XmF0b8vaucaV/vcCRV1w2/KQ9Vg5EHwkmZXRktSAiEMe/7a53ox4ADSY/hehR0bwEYBHcx93vUdOMztkQhW5AzJeqcbkc6jS0mBhU1HEmi1HFEVYP0sAGoIoQKrB/Un3hVt81B+xpZZVKFyoi7B56eZqEBfTf+bBlxWMpGcYjYO8AHzzT7tn7NM+0hvxATqdLGgt0/PryttW4W5FMKvJ+3t8VLO+RswwcDlgkPwIKkFLQV/ThXqBy7fZSL2hrlVN1xwLIgz8Z1mOaezHO+A+TQIkOjQG/jTx/f/aK4b9Pd0U2gyYMv7mKG+o84tSY0gU+geWtBhZKrg8r8iWGnhKJlYlZvISSUl1499svE1t1WSt4wOP+1B/LFJyk/1i9jXOfqYGiR5MHeBY6PXpjW/PkdSRudOIJ+4gkXdGIXTu41uIm5XLCIF5H9JHV6IgulurGia6Hp60omc6WG+gSUw== Hiroki macbook air"
+      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDMrBQUa4iADNPo3q/AQjpQyt1GFsdYKEW9Hd8kC478o3G4UbpuempbF/TlLixp/5tusMQjV9n/8kMJF1kj4lrsFHShftd7+ZXvUKkny8vEOF7aj79j3V9nYFPJ4NFIuJdzPsdfBG51DaT3wbossCEZshfNMc9iBISSLbSwDi6rwxCZX75GvQlMOR5TZSOXe7exj/28QSkyI9hcCbnbK0JG6Kabcxh1ZFAX/BwxDv/ywShWNbM2Y66KbO0BcjQjRPPgEIE05nW7C5Q0K5XJ5DAWHFzdACQakkRUuWXFrNS7ptZSIBY5BKryc0jq0JJinnmoAkMuEKCwUBIVa+5C4EokAM+ICTTaf6kWzWeraueZ4czFUdS5F7R6G/YNP6yTwmx2Y07lLt3m9EijxM8VTDgYsSS2R4yP8KGC1cof7W/Ia+8ZYdPR8Yg/QwfV+OP4CQELaIG1YvZldMJ1KUUsrkFNZ9cNbVtQIL2VLhw/P+PtOBlKgpESE+NvYDG7+3cImTk= hiroki11hanada@gmail.com"
+    # ssh_import_id:
+    #   - gh:hanapedia
+growpart:
+  ignore_growroot_disabled: false
+  mode: auto
+  devices: 
+    - "/"
+final_message: "The system is up and running"
+
+ 

@@ -1,6 +1,0 @@
-# vim: set filetype=yaml.ansible :
----
-- hosts: 127.0.0.1
-  connection: local
-  roles:
-    - check_connections

@@ -1,0 +1,36 @@
+#cloud-config
+# hostname: ${hostname}
+fqdn: ${fqdn}
+timezone: Asia/Tokyo  
+ssh_pwauth: false
+chpasswd:
+  expire: false
+  list: root:password
+users:
+  - name: ubuntu
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups:
+      - users
+      - admin
+    shell: /bin/bash
+    lock_passwd: false
+    ssh_authorized_keys:
+    %{ for key in ssh_keys ~}
+      - ${key}
+    %{ endfor ~}
+    # ssh_import_id:
+    #   - gh:hanapedia
+growpart:
+  ignore_growroot_disabled: false
+  mode: auto
+  devices: 
+    - "/"
+packages:
+  - qemu-guest-agent
+  - network-manager
+# runcmd:
+#   - dhclient -r
+#   - dhclient  
+final_message: "The system is up and running"
+
+

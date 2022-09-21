@@ -1,6 +1,0 @@
-# vim: set filetype=yaml.ansible :
-os_packages:
-  - apt-transport-https
-  - ca-certificates
-  - curl
-  - software-properties-common
