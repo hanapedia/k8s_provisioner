@@ -1,0 +1,20 @@
+# vim: set filetype=yaml.ansible :
+---
+- name: Connect to cluster
+  hosts: localhost
+  tasks:
+    - name: Generate shell script
+      ansible.builtin.template:
+        src: ./templates/copy_kubectl_config.sh.j2
+        dest: ./copy_kubectl_config.sh
+        mode: '1777'
+
+    - name: Copy kubectl context file
+      ansible.builtin.command: bash ./copy_kubectl_config.sh
+      changed_when: true
+
+    - name: Add loadbalancer to etc hosts
+      become: true
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        line: "127.0.0.1 {{ k8s.cluster_name }}-loadbalancer.{{ libvirt.resources.network.domain }}"

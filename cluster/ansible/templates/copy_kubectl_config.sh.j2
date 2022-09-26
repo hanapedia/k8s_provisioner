@@ -1,4 +1,5 @@
 #!/bin/bash
 scp HomeLan:/home/hanapedia/.kube/config ~/.kube/new;
 cp ~/.kube/config ~/.kube/configs/pre_{{ k8s.cluster_name }};
+cp ~/.kube/new ~/.kube/configs/{{ k8s.cluster_name }};
 mv ~/.kube/new ~/.kube/config;

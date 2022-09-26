@@ -1,0 +1,4 @@
+# vim: set filetype=yaml.ansible :
+---
+- import_playbook: 1_1_ssh_port.yaml
+- import_playbook: 1_2_kubectl.yaml
