@@ -4,7 +4,7 @@
   hosts: localhost
   tasks:
     - name: SSH port foreward
-      changed_when: false
+      changed_when: true
       vars:
         localport: "{{ item[1] }}"
         vm_hostname: "{{ k8s.cluster_name }}-{{ item[0] }}"
