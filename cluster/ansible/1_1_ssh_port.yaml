@@ -3,18 +3,33 @@
 - name: Connect to cluster
   hosts: localhost
   tasks:
-    - name: SSH port foreward
-      changed_when: true
-      vars:
-        localport: "{{ item[1] }}"
-        vm_hostname: "{{ k8s.cluster_name }}-{{ item[0] }}"
-        vm_port: "{{ item[1] }}"
-        vm_host: # already defined in group_vars, overwrite if need to be
-          domain: HomeLan
-      ansible.builtin.command: "ssh -o ProxyCommand='ssh -W %h:%p -q {{ vm_host.domain }}' \
-                                -fNL {{ localport }}:{{ vm_hostname }}.{{ libvirt.resources.network.domain }}:{{ vm_port }} \
-                                {{ k8s.ubuntu.user }}@{{ vm_hostname }}.{{ libvirt.resources.network.domain }}"
-      loop: # "{{ ['node1', 'loadbalancer'] | product(['32001', '6443']) | list }}"
-        - "{{ ['loadbalancer', '6443'] }}"
-        - "{{ ['node2', '31300'] }}"
-        - "{{ ['node3', '31090'] }}"
+    - name: Try lan and rescue with wan
+      block:
+        - name: SSH port foreward (Lan)
+          changed_when: true
+          vars:
+            localport: "{{ item[1] }}"
+            vm_hostname: "{{ k8s.cluster_name }}-{{ item[0] }}"
+            vm_port: "{{ item[1] }}"
+            vm_host: # already defined in group_vars, overwrite if need to be
+              domain: HomeLan
+          ansible.builtin.command: "gtimeout 5 ssh -o ProxyCommand='ssh -W %h:%p -q {{ vm_host.domain }}' \
+                                    -fNL {{ localport }}:{{ vm_hostname }}.{{ libvirt.resources.network.domain }}:{{ vm_port }} \
+                                    {{ k8s.ubuntu.user }}@{{ vm_hostname }}.{{ libvirt.resources.network.domain }}"
+          loop: # "{{ ['node1', 'loadbalancer'] | product(['32001', '6443']) | list }}"
+            - "{{ ['loadbalancer', '6443'] }}"
+
+      rescue:
+        - name: SSH port foreward (Wan)
+          changed_when: true
+          vars:
+            localport: "{{ item[1] }}"
+            vm_hostname: "{{ k8s.cluster_name }}-{{ item[0] }}"
+            vm_port: "{{ item[1] }}"
+            vm_host: # already defined in group_vars, overwrite if need to be
+              domain: HomeWan
+          ansible.builtin.command: "ssh -o ProxyCommand='ssh -W %h:%p -q {{ vm_host.domain }}' \
+                                    -fNL {{ localport }}:{{ vm_hostname }}.{{ libvirt.resources.network.domain }}:{{ vm_port }} \
+                                    {{ k8s.ubuntu.user }}@{{ vm_hostname }}.{{ libvirt.resources.network.domain }}"
+          loop: # "{{ ['node1', 'loadbalancer'] | product(['32001', '6443']) | list }}"
+            - "{{ ['loadbalancer', '6443'] }}"
