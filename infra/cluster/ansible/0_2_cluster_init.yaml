@@ -1,0 +1,42 @@
+# vim: set filetype=yaml.ansible :
+---
+- hosts: control_planes, nodes, loadbalancer
+  name: Re-gather machine facts
+  become: true
+  vars_files:
+    - "{{ config_path }}"
+  roles:
+    - set_vm_facts
+
+- hosts: control_planes[0]
+  name: Setup master control plane
+  become: true
+  vars_files:
+    - "{{ config_path }}"
+  roles:
+    - setup_master_cp
+
+- hosts: control_planes[1:]
+  name: Join the control planes
+  become: true
+  vars_files:
+    - "{{ config_path }}"
+  roles:
+    - join_cp
+
+- hosts: nodes
+  name: Join the nodes
+  become: true
+  vars_files:
+    - "{{ config_path }}"
+  roles:
+    - join_node
+
+- hosts: vm_host
+  name: Connect kubectl
+  become: true
+  vars_files:
+    - "{{ config_path }}"
+  roles:
+    - setup_kubectl
+    - apply_calico
