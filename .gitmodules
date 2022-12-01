@@ -1,3 +1,0 @@
-[submodule "k8s/observability/kube-prometheus"]
-	path = k8s/observability/kube-prometheus
-	url = https://github.com/prometheus-operator/kube-prometheus.git

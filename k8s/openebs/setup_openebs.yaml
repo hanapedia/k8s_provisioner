@@ -1,5 +1,5 @@
 # vim: set filetype=yaml.ansible :
-- hosts: nodes
+- hosts: single_node
   name: Setup iscsid
   become: true
   vars:

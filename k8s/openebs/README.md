@@ -7,9 +7,9 @@
 ## steps
 - Install iSCI on each working nodes and enable iscid
 ```
-$ ansible-playbook setup_iscsi.yaml
+ansible-playbook setup_openebs.yaml
 ```
 - Install OpenEBS operator
 ```
-$ kubectl apply -f https://openebs.github.io/charts/openebs-operator.yaml
+kubectl apply -f https://openebs.github.io/charts/openebs-operator.yaml
 ```

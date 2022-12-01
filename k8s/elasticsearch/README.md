@@ -15,7 +15,7 @@ kubectl -n elastic-system logs -f statefulset.apps/elastic-operator
 
 ## Deploy elasticsearch cluster
 ```
-kubectl apply -f elasticsearch-manifest.yaml
+kubectl apply -f elasticsearch-manifest.yaml -n observability
 ```
 monitor elasticsearch cluster
 ```
