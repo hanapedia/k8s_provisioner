@@ -3,26 +3,26 @@
 
 - name: Apply terraform configuration
   community.general.terraform:
-    project_path: "../terraform/kvm-{{ k8s.cluster_name }}"
+    project_path: "../terraform/kvm-{{ configurable.k8s.cluster_name }}"
     state: absent
     variables:
       libvirt_uri: "{{ libvirt.uri }}"
-      domain: "{{ libvirt.resources.network.domain }}"
-      cluster_name: "{{ k8s.cluster_name }}"
-      versioned_namespace: "{{ libvirt.resources.namespace }}-{{ libvirt.resources.version }}"
+      domain: "{{ configurable.libvirt.network.domain }}"
+      cluster_name: "{{ configurable.k8s.cluster_name }}"
+      versioned_namespace: "{{ configurable.libvirt.namespace }}-{{ configurable.libvirt.version }}"
       ubuntu_22_img_url: "{{ libvirt.ubuntu_base_img_url }}"
       ssh_keys: "{{ ssh_keys | to_json }}"
-      num_control_plane: "{{ k8s.control_plane.vms }}"
-      disk_size_cp: "{{ k8s.control_plane.disk }}"
-      memory_cp: "{{ k8s.control_plane.mem }}"
-      cpu_cp: "{{ k8s.control_plane.cpu }}"
-      num_node: "{{ k8s.node.vms }}"
-      disk_size_n: "{{ k8s.node.disk }}"
-      memory_n: "{{ k8s.node.mem }}"
-      cpu_n: "{{ k8s.node.cpu }}"
-      disk_size_lb: "{{ k8s.loadbalancer.disk }}"
-      memory_lb: "{{ k8s.loadbalancer.mem }}"
-      cpu_lb: "{{ k8s.loadbalancer.cpu }}"
+      num_control_plane: "{{ configurable.k8s.control_plane.vms }}"
+      disk_size_cp: "{{ configurable.k8s.control_plane.disk }}"
+      memory_cp: "{{ configurable.k8s.control_plane.mem }}"
+      cpu_cp: "{{ configurable.k8s.control_plane.cpu }}"
+      num_node: "{{ configurable.k8s.node.vms }}"
+      disk_size_n: "{{ configurable.k8s.node.disk }}"
+      memory_n: "{{ configurable.k8s.node.mem }}"
+      cpu_n: "{{ configurable.k8s.node.cpu }}"
+      disk_size_lb: "{{ configurable.k8s.loadbalancer.disk }}"
+      memory_lb: "{{ configurable.k8s.loadbalancer.mem }}"
+      cpu_lb: "{{ configurable.k8s.loadbalancer.cpu }}"
   register: output
 
 - name: Clear vms_inventory file
@@ -33,6 +33,6 @@
 
 - name: Ensure that terraform directory for the cluster is deleted
   ansible.builtin.file:
-    path: "../terraform/kvm-{{ k8s.cluster_name }}"
+    path: "../terraform/kvm-{{ configurable.k8s.cluster_name }}"
     state: absent
     mode: '1777'

@@ -2,18 +2,18 @@ all:
   children:
     control_planes:
       hosts:
-        {{ k8s.cluster_name }}-cp[1:{{ k8s.control_plane.vms }}].{{ libvirt.resources.network.domain }}:
+        {{ configurable.k8s.cluster_name }}-cp[1:{{ configurable.k8s.control_plane.vms }}].{{ configurable.libvirt.network.domain }}:
           ansible_user: ubuntu
           ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q {{ vm_host.domain }}"'
         
     nodes:
       hosts:
-        {{ k8s.cluster_name }}-node[1:{{ k8s.node.vms }}].{{ libvirt.resources.network.domain }}:
+        {{ configurable.k8s.cluster_name }}-node[1:{{ configurable.k8s.node.vms }}].{{ configurable.libvirt.network.domain }}:
           ansible_user: ubuntu
           ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q {{ vm_host.domain }}"'
 
     loadbalancer:
       hosts:
-        {{ k8s.cluster_name }}-loadbalancer.{{ libvirt.resources.network.domain }}:
+        {{ configurable.k8s.cluster_name }}-loadbalancer.{{ configurable.libvirt.network.domain }}:
           ansible_user: ubuntu
           ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q {{ vm_host.domain }}"'

@@ -1,0 +1,22 @@
+# vim: set filetype=yaml.ansible :
+---
+- hosts: hanapediaserver
+  name: initialize kubernetes cluster on single node
+  become: true
+  vars_prompt:
+    - name: cni_plugin
+      prompt: cni plugin? (flannel, calico, or cilium)
+      private: false
+  vars:
+    single_node_control_plane_endpoint: hanapediaserver
+    service_network_cidr: 192.168.1.0/24
+    # kube_installed: true
+    # kube_init: true
+  roles:
+    # - set_vm_facts
+    # - common_setup
+    # - install_cri
+    # - install_kube
+    - setup_master_cp # replace with single node variant
+    - setup_kubectl
+    - apply_cni

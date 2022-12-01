@@ -9,7 +9,15 @@
         mode: '1777'
 
     - name: Save kubeconfig as file
+      when: not configurable.k8s.single_node
       ansible.builtin.copy:
         content: "{{ hostvars[groups['control_planes'][0]]['kube_config'] }}"
+        dest: "/home/{{ vm_host.user }}/.kube/config"
+        mode: '1777'
+
+    - name: Save kubeconfig as file
+      when: configurable.k8s.single_node
+      ansible.builtin.copy:
+        content: "{{ hostvars[groups['single_node'][0]]['kube_config'] }}"
         dest: "/home/{{ vm_host.user }}/.kube/config"
         mode: '1777'

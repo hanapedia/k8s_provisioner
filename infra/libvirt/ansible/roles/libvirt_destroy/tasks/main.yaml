@@ -2,18 +2,18 @@
 ---
 - name: Apply terraform configuration
   community.general.terraform:
-    project_path: "../terraform/libvirt-{{ libvirt.version }}"
+    project_path: "../terraform/libvirt-{{ configurable.libvirt.version }}"
     state: absent
     variables:
       libvirt_uri: "{{ libvirt.uri }}"
-      resource_version: "{{ libvirt.version }}"
-      namespace: "{{ libvirt.namespace }}"
-      domain: "{{ libvirt.network.domain }}"
-      network_cidr: "{{ libvirt.network.network_cidr | to_json }}"
+      resource_version: "{{ configurable.libvirt.version }}"
+      namespace: "{{ configurable.libvirt.namespace }}"
+      domain: "{{ configurable.libvirt.network.domain }}"
+      network_cidr: "{{ configurable.libvirt.network.network_cidr | to_json }}"
   register: output
 
 - name: Ensure that terraform directory with right version is deleted
   ansible.builtin.file:
-    path: "../terraform/libvirt-{{ libvirt.version }}"
+    path: "../terraform/libvirt-{{ configurable.libvirt.version }}"
     state: absent
     mode: '1777'

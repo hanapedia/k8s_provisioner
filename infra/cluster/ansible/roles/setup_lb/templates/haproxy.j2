@@ -26,7 +26,7 @@ defaults
     timeout check           10s
     maxconn                 3000
 
-{% if k8s.control_plane.vms > 1  %}
+{% if configurable.k8s.control_plane.vms > 1  %}
 frontend kubernetes-control-plane
     bind *:6443
     default_backend kubernetes-control-plane

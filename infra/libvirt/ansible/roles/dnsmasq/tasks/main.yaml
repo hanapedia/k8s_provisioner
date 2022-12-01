@@ -10,7 +10,7 @@
     - name: Enable localdns if systemd-resolved is present
       ansible.builtin.template:
         src: systemd-resolved.j2
-        dest: /etc/systemd/resolved.conf.d/{{ libvirt.namespace }}.conf
+        dest: /etc/systemd/resolved.conf.d/{{ configurable.libvirt.namespace }}.conf
         mode: '1777'
       notify:
         - Restart systemd-resolved
@@ -30,7 +30,7 @@
 - name: Configure NetworkManager for local DNS
   ansible.builtin.copy:
     src: localdns.conf
-    dest: /etc/NetworkManager/conf.d/{{ libvirt.namespace }}-localdns.conf
+    dest: /etc/NetworkManager/conf.d/{{ configurable.libvirt.namespace }}-localdns.conf
     mode: '1777'
   notify:
     - Restart NetworkManager
@@ -38,7 +38,7 @@
 - name: Configure NetworkManager for libvirt network
   ansible.builtin.template:
     src: libvirt_dnsmasq.j2
-    dest: /etc/NetworkManager/dnsmasq.d/{{ libvirt.namespace }}-libvirt_dnsmasq.conf
+    dest: /etc/NetworkManager/dnsmasq.d/{{ configurable.libvirt.namespace }}-libvirt_dnsmasq.conf
     mode: '1777'
   notify:
     - Restart NetworkManager

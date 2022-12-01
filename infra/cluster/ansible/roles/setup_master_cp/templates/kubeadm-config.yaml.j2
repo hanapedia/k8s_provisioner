@@ -6,10 +6,15 @@ bootstrapTokens:
 ---
 kind: ClusterConfiguration
 apiVersion: kubeadm.k8s.io/v1beta3
+clusterName: "{{ configurable.k8s.cluster_name }}"
 networking:
   serviceSubnet: "{{ k8s.network.service_cidr }}"
+{% if configurable.k8s.cni_plugin == 'flannel' %}
+  podSubnet: 10.244.0.0/16
+{% else %}
   podSubnet: "{{ k8s.network.pod_cidr }}"
-{% if k8s.control_plane.vms > 1  %}
+{% endif %}
+{% if configurable.k8s.control_plane.vms > 1  %}
 controlPlaneEndpoint: {{ hostvars[groups['loadbalancer'][0]].host_fqdn }}
 {% endif %}
 

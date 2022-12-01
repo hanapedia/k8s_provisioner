@@ -1,0 +1,6 @@
+configurable:
+  k8s:
+    cluster_name: home-cluster # name prefix used for kvms
+    cni_plugin: flannel
+    single_node: true
+

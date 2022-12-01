@@ -1,3 +1,37 @@
+configurable:
+  libvirt:
+    # must be edited in sync with variables in libvirt ansible dir
+    version: v1
+    namespace: k8s
+
+    network:
+      domain: k8s.home
+      network_cidr:
+        - 192.168.100.0/24
+
+  k8s:
+    cluster_name: home-cluster
+    single_node: false
+    cni_plugin: flannel
+
+    control_plane:
+      cpu: 2
+      mem: 4
+      vms: 2
+      disk: 16
+
+    node:
+      cpu: 2
+      mem: 8
+      vms: 3
+      disk: 24
+    
+    loadbalancer:
+      cpu: 1 
+      mem: 4 
+      vms: 1 
+      disk: 8 
+
 # vm host variables
 vm_host:
   domain: HomeLan
@@ -7,43 +41,15 @@ vm_host:
 # libvirt variables
 libvirt:
   uri: "qemu+ssh://hanapedia@ubuntuhome/system"
-
   # non-kvm ubuntu image
   ubuntu_base_img_url: "https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64.img"
   # kvm variant with limited kernel
   # ubuntu_base_img_url: "https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64-disk-kvm.img"
 
-  # must be edited in sync with variables in libvirt ansible dir
-  resources: 
-    version: v1
-    namespace: k8s
-  
-    network:
-      domain: k8s.home
-      network_cidr:
-        - 192.168.100.0/24
 
 # k8s varibales
 k8s:
-  cluster_name: home-cluster
-
-  control_plane:
-    cpu: 2
-    mem: 4
-    vms: 2
-    disk: 16
-
-  node:
-    cpu: 2
-    mem: 8
-    vms: 3
-    disk: 24
-  
   loadbalancer:
-    cpu: 1 
-    mem: 4 
-    vms: 1 
-    disk: 8 
     setup: 
       packages:
         - haproxy
@@ -57,7 +63,8 @@ k8s:
 
   ubuntu:
     user: ubuntu
-    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    repo_key_dest: /usr/share/keyrings/kubernetes-archive-keyring.gpg
+    repo: deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main
     repo_file: /etc/apt/sources.list.d/kubernetes.list
     repo_key: https://packages.cloud.google.com/apt/doc/apt-key.gpg
     packages:
@@ -79,12 +86,20 @@ k8s:
     network_cidr: 192.168.100.0/24
     service_cidr: 10.110.0.0/16
     pod_cidr: 10.20.0.0/16
-    cni_plugin: calico
 
   calico:
     calico_repo: https://raw.githubusercontent.com/projectcalico/calico/v3.24.0/manifests/tigera-operator.yaml
     calico_operator: https://raw.githubusercontent.com/projectcalico/calico/v3.24.0/manifests/tigera-operator.yaml
     calico_crd: https://raw.githubusercontent.com/projectcalico/calico/v3.24.0/manifests/custom-resources.yaml
+
+  flannel:
+    flannel_repo: https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+
+  cilium:
+    chart:
+      name: cilium
+      ref: cilium/cilium
+      url: https://helm.cilium.io/
 
 ssh_keys: 
   - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCVDhT/P9zxI4ypW39uNYbkcl5kadudwPcJDdnCK1s5oURgNlmPpRtHP3l2Bfp2v4kd35PyQGXWA9xlK+oud5sILV04R1I0/lmr2p6HPO9lfhFuHxm+irXiJdkCdv9ymw7jrYSQPQy/Wv29pwSEVgha2OZnyUh7jsPw1XGVlv4ZjJxkYa/fRm2ERikz/2Qg7vCVRUoz8kAqVRgp+Ra5wR4WMY8XmF0b8vaucaV/vcCRV1w2/KQ9Vg5EHwkmZXRktSAiEMe/7a53ox4ADSY/hehR0bwEYBHcx93vUdOMztkQhW5AzJeqcbkc6jS0mBhU1HEmi1HFEVYP0sAGoIoQKrB/Un3hVt81B+xpZZVKFyoi7B56eZqEBfTf+bBlxWMpGcYjYO8AHzzT7tn7NM+0hvxATqdLGgt0/PryttW4W5FMKvJ+3t8VLO+RswwcDlgkPwIKkFLQV/ThXqBy7fZSL2hrlVN1xwLIgz8Z1mOaezHO+A+TQIkOjQG/jTx/f/aK4b9Pd0U2gyYMv7mKG+o84tSY0gU+geWtBhZKrg8r8iWGnhKJlYlZvISSUl1499svE1t1WSt4wOP+1B/LFJyk/1i9jXOfqYGiR5MHeBY6PXpjW/PkdSRudOIJ+4gkXdGIXTu41uIm5XLCIF5H9JHV6IgulurGia6Hp60omc6WG+gSUw== Hiroki macbook air"

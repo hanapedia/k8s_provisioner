@@ -1,1 +1,1 @@
-server=/{{ libvirt.network.domain }}/{{ libvirt.network.network_cidr[0] | ansible.utils.next_nth_usable(1) }}
+server=/{{ configurable.libvirt.network.domain }}/{{ configurable.libvirt.network.network_cidr[0] | ansible.utils.next_nth_usable(1) }}

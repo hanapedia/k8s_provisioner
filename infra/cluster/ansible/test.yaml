@@ -1,0 +1,9 @@
+---
+- hosts: hanapediaserver
+  become: true
+  tasks:
+    - name: Enable cgroup driver
+      ansible.builtin.replace:
+        path: /etc/containerd/config.toml
+        regexp: "            SystemdCgroup = false"
+        replace: "            SystemdCgroup = true"

@@ -4,3 +4,9 @@ all:
       hosts:
         HomeLan:
           ansible_python_interpreter: /home/hanapedia/.pyenv/shims/python
+
+    single_node:
+      hosts:
+        hanapediaserver:
+          ansible_python_interpreter: /home/hanapedia/.pyenv/shims/python
+      

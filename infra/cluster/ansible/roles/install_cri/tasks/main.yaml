@@ -51,6 +51,12 @@
       ansible.builtin.shell: containerd config default > /etc/containerd/config.toml
       changed_when: true
 
+    - name: Enable cgroup driver
+      ansible.builtin.replace:
+        path: /etc/containerd/config.toml
+        regexp: "            SystemdCgroup = false"
+        replace: "            SystemdCgroup = true"
+
     - name: Force systemd to reread configs
       ansible.builtin.systemd:
         daemon_reload: true

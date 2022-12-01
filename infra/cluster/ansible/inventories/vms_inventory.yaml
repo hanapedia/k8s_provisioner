@@ -8,7 +8,7 @@ all:
         
     nodes:
       hosts:
-        home-cluster-node[1:3].k8s.home:
+        home-cluster-node[1:5].k8s.home:
           ansible_user: ubuntu
           ansible_ssh_common_args: '-o ProxyCommand="ssh -W %h:%p -q HomeLan"'
 

@@ -1,0 +1,24 @@
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: InitConfiguration
+certificateKey: "{{ hostvars[groups['single_node'][0]].kube_cert }}"
+bootstrapTokens:
+  - token: "{{ hostvars[groups['single_node'][0]].kube_token }}"
+---
+kind: ClusterConfiguration
+apiVersion: kubeadm.k8s.io/v1beta3
+networking:
+  serviceSubnet: "{{ service_network_cidr }}"
+{% if configurable.k8s.cni_plugin == 'flannel' %}
+  podSubnet: 10.244.0.0/16
+{% else %}
+  podSubnet: "{{ k8s.network.pod_cidr }}"
+{% endif %}
+controlPlaneEndpoint: {{ single_node_control_plane_endpoint }}
+clusterName: "{{ configurable.k8s.cluster_name }}"
+
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+{% if k8s.cri == 'crio' %}
+cgroupDriver: systemd
+{% endif %}

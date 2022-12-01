@@ -1,10 +1,15 @@
 # vim: set filetype=yaml.ansible :
 - name: Install Kube tools
   block:
+    # - name: Add google cloud reposiotry key
+    #   ansible.builtin.apt_key:
+    #     url: "{{ k8s.ubuntu.repo_key }}"
+    #     state: present
+
     - name: Add google cloud reposiotry key
-      ansible.builtin.apt_key:
+      ansible.builtin.get_url:
         url: "{{ k8s.ubuntu.repo_key }}"
-        state: present
+        dest: "{{ k8s.ubuntu.repo_key_dest }}"
 
     - name: Add apt repository
       ansible.builtin.apt_repository:

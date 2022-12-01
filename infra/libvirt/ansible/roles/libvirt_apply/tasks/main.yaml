@@ -2,30 +2,30 @@
 ---
 - name: Ensure that terraform directory with right version exists
   ansible.builtin.file:
-    path: "../terraform/libvirt-{{ libvirt.version }}"
+    path: "../terraform/libvirt-{{ configurable.libvirt.version }}"
     state: directory
     mode: '1777'
 
 - name: Copy terraform files to directory
   ansible.builtin.copy:
     src: "./files/terraform/main.tf"
-    dest: "../terraform/libvirt-{{ libvirt.version }}/main.tf"
+    dest: "../terraform/libvirt-{{ configurable.libvirt.version }}/main.tf"
     mode: '1777'
 
 - name: Initialize terraform
   ansible.builtin.command:
     cmd: terraform init
-    chdir: "../terraform/libvirt-{{ libvirt.version }}"
+    chdir: "../terraform/libvirt-{{ configurable.libvirt.version }}"
   changed_when: true
 
 - name: Apply terraform configuration
   community.general.terraform:
-    project_path: "../terraform/libvirt-{{ libvirt.version }}"
+    project_path: "../terraform/libvirt-{{ configurable.libvirt.version }}"
     state: present
     variables:
       libvirt_uri: "{{ libvirt.uri }}"
-      resource_version: "{{ libvirt.version }}"
-      namespace: "{{ libvirt.namespace }}"
-      domain: "{{ libvirt.network.domain }}"
-      network_cidr: "{{ libvirt.network.network_cidr | to_json }}"
+      resource_version: "{{ configurable.libvirt.version }}"
+      namespace: "{{ configurable.libvirt.namespace }}"
+      domain: "{{ configurable.libvirt.network.domain }}"
+      network_cidr: "{{ configurable.libvirt.network.network_cidr | to_json }}"
   register: output

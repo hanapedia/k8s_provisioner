@@ -1,17 +1,20 @@
 # vim: set filetype=yaml.ansible :
-- name: wait for connection
-  ansible.builtin.pause:
-    seconds: 10
+# - name: wait for connection
+#   ansible.builtin.pause:
+#     seconds: 10
 
-- name: Update all packages
+- name: Upgrade the OS (apt-get dist-upgrade)
   ansible.builtin.apt:
-    # update_cache: true
-    upgrade: true
+    upgrade: dist
+
+- name: Update all packages to their latest version
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
 
 - name: Install required packages
   ansible.builtin.apt:
     name: "{{ os_packages }}"
-    # update_cache: true
     state: present
 #
 # - name: Extract facts from setup

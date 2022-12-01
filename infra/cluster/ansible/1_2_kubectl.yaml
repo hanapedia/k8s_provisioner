@@ -17,4 +17,4 @@
       become: true
       ansible.builtin.lineinfile:
         path: /etc/hosts
-        line: "127.0.0.1 {{ k8s.cluster_name }}-loadbalancer.{{ libvirt.resources.network.domain }}"
+        line: "127.0.0.1 {{ configurable.k8s.cluster_name }}-loadbalancer.{{ configurable.libvirt.network.domain }}"
