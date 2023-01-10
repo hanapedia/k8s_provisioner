@@ -1,18 +1,18 @@
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: InitConfiguration
-certificateKey: "{{ hostvars[groups['control_planes'][0]].kube_cert }}"
+certificateKey: {{ hostvars[groups['control_planes'][0]].kube_cert }}
 bootstrapTokens:
-  - token: "{{ hostvars[groups['control_planes'][0]].kube_token }}"
+  - token: {{ hostvars[groups['control_planes'][0]].kube_token }}
 ---
 kind: ClusterConfiguration
 apiVersion: kubeadm.k8s.io/v1beta3
-clusterName: "{{ configurable.k8s.cluster_name }}"
+clusterName: {{ configurable.k8s.cluster_name }}
 networking:
-  serviceSubnet: "{{ k8s.network.service_cidr }}"
+  serviceSubnet: {{ k8s.network.service_cidr }}
 {% if configurable.k8s.cni_plugin == 'flannel' %}
   podSubnet: 10.244.0.0/16
 {% else %}
-  podSubnet: "{{ k8s.network.pod_cidr }}"
+  podSubnet: {{ k8s.network.pod_cidr }}
 {% endif %}
 {% if configurable.k8s.control_plane.vms > 1  %}
 controlPlaneEndpoint: {{ hostvars[groups['loadbalancer'][0]].host_fqdn }}
@@ -21,6 +21,4 @@ controlPlaneEndpoint: {{ hostvars[groups['loadbalancer'][0]].host_fqdn }}
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
-{% if k8s.cri == 'crio' %}
 cgroupDriver: systemd
-{% endif %}

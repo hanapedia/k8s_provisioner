@@ -52,6 +52,7 @@
       changed_when: true
 
     - name: Enable cgroup driver
+      when: configurable.k8s.single_node
       ansible.builtin.replace:
         path: /etc/containerd/config.toml
         regexp: "            SystemdCgroup = false"
@@ -66,9 +67,9 @@
         name: containerd
         state: restarted
         enabled: true
-  when: k8s.cri == 'containerd'
+  when: cri == 'containerd'
 
-- name: Install and configure cri-o
+- name: Install cri-o
   block:
     - name: Add crio repo key
       ansible.builtin.apt_key:
@@ -76,10 +77,10 @@
         keyring: "{{ item.keyring }}"
         state: present
       loop:
-        - key: "{{ k8s.crio.libcontainers_key }}"
-          keyring: "{{ k8s.crio.libcontainers_keyring }}"
-        - key: "{{ k8s.crio.crio_key }}"
-          keyring: "{{ k8s.crio.crio_keyring }}"
+        - key: "{{ crio.libcontainers_key }}"
+          keyring: "{{ crio.libcontainers_keyring }}"
+        - key: "{{ crio.crio_key }}"
+          keyring: "{{ crio.crio_keyring }}"
 
     - name: Ensure the presence of apt-repo for cri-o
       ansible.builtin.apt_repository:
@@ -87,10 +88,10 @@
         filename: "{{ item.file }}"
         state: present
       loop:
-        - repo: "{{ k8s.crio.libcontainers_repo }}"
+        - repo: "{{ crio.libcontainers_repo }}"
           file: /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
-        - repo: "{{ k8s.crio.crio_repo }}"
-          file: /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:1.24.list
+        - repo: "{{ crio.crio_repo }}"
+          file: /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:{{ k8s.version }}.list
 
     - name: Temporary fix for memory swap slices on 20.04
       ansible.builtin.lineinfile:
@@ -102,20 +103,20 @@
       ansible.builtin.apt:
         name:
           - cri-o
-          - cri-o-runc
+          - crun
         state: present
 
     - name: Fire crio-conf template
       ansible.builtin.template:
         src: crio.conf.j2
         dest: /etc/crio/crio.conf
-        mode: '1777'
+        mode: 0755
 
     - name: Fire crio-conf template
       ansible.builtin.template:
         src: crio.conf.crun.j2
         dest: /etc/crio/crio.conf.d/01-crio-runc.conf
-        mode: '1777'
+        mode: 0755
 
     - name: Remove example CNI configs
       ansible.builtin.file:
@@ -134,7 +135,7 @@
         name: crio
         state: started
         enabled: true
-  when: k8s.cri == 'crio'
+  when: cri == 'crio'
 
 - name: reboot cp and nodes
   ansible.builtin.reboot:

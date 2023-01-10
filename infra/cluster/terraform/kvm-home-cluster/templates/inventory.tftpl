@@ -1,9 +1,0 @@
-[k8s_control_plane]
-%{ for ip in control_plane_ips ~}
-${ip}
-%{ endfor ~}
-
-[k8s_node]
-%{ for nip in node_ips ~}
-${nip}
-%{ endfor ~}

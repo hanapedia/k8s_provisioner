@@ -1,1 +1,0 @@
-{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"control_plane","Source":"./modules/vm_instance","Dir":"modules/vm_instance"},{"Key":"loadbalancer","Source":"./modules/vm_instance","Dir":"modules/vm_instance"},{"Key":"node","Source":"./modules/vm_instance","Dir":"modules/vm_instance"}]}
