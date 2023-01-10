@@ -1,7 +1,8 @@
 apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
-  name: simplest
+  name: otelcollector
+  namespace: observability
 spec:
   config: |
     receivers:
@@ -9,14 +10,18 @@ spec:
         protocols:
           grpc:
           http:
-    processors:
 
     exporters:
+      jaeger:
+        endpoint: "jaeger-prod-collector:14250"
+        tls:
+          insecure: true
       logging:
+        loglevel: debug
 
     service:
       pipelines:
         traces:
           receivers: [otlp]
           processors: []
-          exporters: [logging]
+          exporters: [logging,jaeger]
