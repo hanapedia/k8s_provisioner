@@ -3,7 +3,7 @@ kind: Elasticsearch
 metadata:
   name: jaeger-backend
 spec:
-  version: 7.17.7
+  version: 7.17.8
   nodeSets:
   - name: default
     count: 1

@@ -8,10 +8,12 @@ prerequisite:
 install operator
 ```
 kubectl create ns observability
-kubectl create -f https://github.com/jaegertracing/jaeger-operator/releases/download/v1.39.0/jaeger-operator.yaml -n observability
+kubectl create -f https://github.com/jaegertracing/jaeger-operator/releases/download/v1.41.0/jaeger-operator.yaml -n observability
 ```
 ## Deploy elasticsearch cluster as jaeger storage
 ```
+cd backend
+ansible-playbook enable_crio_capabilities.yaml
 kubectl apply -f jaeger-backend-es-manifest.yaml -n observability
 ```
 
@@ -23,5 +25,6 @@ kubectl create secret generic jaeger-secret --from-literal=ES_PASSWORD=$ESPW --f
 ```
 apply jaeger manifest 
 ```
+cd ../
 kubectl apply -f jaeger-manifest.yaml -n observability
 ```
