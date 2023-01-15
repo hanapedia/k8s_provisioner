@@ -14,7 +14,7 @@ kubectl create -f https://github.com/jaegertracing/jaeger-operator/releases/down
 ```
 cd backend
 ansible-playbook enable_crio_capabilities.yaml
-kubectl apply -f jaeger-backend-es-manifest.yaml -n observability
+kubectl apply -f backend/jaeger-backend-es-manifest.yaml -n observability
 ```
 
 ## Deploy Jaeger instance with Production strategy
