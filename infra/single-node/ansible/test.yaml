@@ -1,0 +1,11 @@
+# vim: set filetype=yaml.ansible :
+---
+- hosts: hanapediaserver
+  name: initialize kubernetes cluster on single node
+  become: true
+  vars:
+    user: hanapedia
+  tasks:
+    - name: test crun installation
+      ansible.builtin.include_role:
+        name: install_crun

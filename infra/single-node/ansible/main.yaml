@@ -1,0 +1,52 @@
+# vim: set filetype=yaml.ansible :
+---
+- hosts: hanapediaserver
+  name: initialize kubernetes cluster on single node
+  become: true
+  vars:
+    user: hanapedia
+    cluster_name: home-cluster
+    k8s_version: '1.26'
+    cni_plugin: flannel
+    service_network_cidr: 192.168.1.0/24 
+    pod_network_cidr: 10.20.0.0/16
+    control_plane_endpoint: hanapediaserver
+  tasks:
+    - name: Common setup
+      ansible.builtin.include_role:
+        name: setup
+      tags: skip
+
+    - name: Install wasm edge
+      ansible.builtin.include_role:
+        name: install_wasmedge
+      tags: skip
+
+    - name: Install and setup cri
+      ansible.builtin.include_role:
+        name: install_crio
+      tags: skip
+
+    - name: Install Kube 
+      ansible.builtin.include_role:
+        name: install_kube
+      tags: skip
+
+    - name: Initialize k8s cluster
+      ansible.builtin.include_role:
+        name: init_cluster
+      tags: skip
+
+    - name: Install cni
+      ansible.builtin.include_role:
+        name: install_cni
+      # tags: skip
+
+    - name: wait until the cni installation is compeleted
+      ansible.builtin.wait_for:
+        timeout: 10
+
+    - name: Untaint control plane node
+      ansible.builtin.command:
+        cmd: kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+

@@ -1,0 +1,35 @@
+- name: Install Calico
+  block:
+    - name: Ensure that /tmp/{{ cluster_name }} exists
+      ansible.builtin.file:
+        path: /tmp/{{ cluster_name }}
+        state: directory
+        mode: '1777'
+
+    - name: Download calico manifest
+      ansible.builtin.get_url:
+        url: "{{ item.url }}"
+        dest: "{{ item.name }}"
+        mode: '0644'
+      loop:
+        - name: /tmp/{{ cluster_name }}/calico-operator.yaml
+          url: "{{ calico.operator }}"
+        - name: /tmp/{{ cluster_name }}/calico-crd.yaml
+          url: "{{ calico.crd }}"
+
+    - name: Apply custom CIDR to calico installation manifest
+      ansible.builtin.replace:
+        path: /tmp/{{ cluster_name }}/calico-crd.yaml
+        regexp: 192.168.0.0\/16
+        replace: "{{ pod_network_cidr }}"
+
+    - name: Apply calico manifests to the cluster.
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ item }}"
+        kubeconfig: /home/{{ user }}/.kube/config
+        wait: true
+      loop:
+        - /tmp/{{ cluster_name }}/calico-operator.yaml
+        - /tmp/{{ cluster_name }}/calico-crd.yaml
+

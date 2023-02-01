@@ -1,0 +1,9 @@
+# vim: set filetype=yaml.ansible :
+---
+- name: Install wasm edge
+  block:
+    - name: Run the installation script
+      ansible.builtin.shell:
+        cmd: curl -sSf https://raw.githubusercontent.com/WasmEdge/WasmEdge/master/utils/install.sh | bash -s -- -p /usr/local
+      register: installation_result
+      failed_when: "'WasmEdge Successfully installed' not in installation_result.stdout"

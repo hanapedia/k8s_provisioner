@@ -1,0 +1,26 @@
+- name: Configure flannel
+  block:
+    - name: Ensure that /tmp/{{ cluster_name }} exists
+      ansible.builtin.file:
+        path: /tmp/{{ cluster_name }}
+        state: directory
+        mode: '1777'
+
+    - name: Download flannel manifest
+      ansible.builtin.get_url:
+        url: "{{ flannel.repo }}"
+        dest: /tmp/{{ cluster_name }}/kube-flannel.yaml
+        mode: 0755
+
+    - name: Patch kube-flannel to use host-gw instead of vxlan
+      ansible.builtin.replace:
+        path: /tmp/{{ cluster_name }}/kube-flannel.yaml
+        regexp: 'vxlan'
+        replace: 'host-gw'
+
+    - name: Apply flannel manifests to the cluster.
+      kubernetes.core.k8s:
+        state: present
+        src: /tmp/{{ cluster_name }}/kube-flannel.yaml
+        kubeconfig: "/home/{{ user }}/.kube/config"
+        wait: true

@@ -1,0 +1,75 @@
+# vim: set filetype=yaml.ansible :
+---
+- name: Setup cluster with kubeadm
+  block:
+    - name: Generate clusteer token
+      ansible.builtin.command: kubeadm token generate
+      register: kube_token
+      when: kube_token is not defined
+
+    - name: Set token as fact
+      ansible.builtin.set_fact:
+        kube_token: "{{ kube_token.stdout }}"
+
+    - name: Generate certificate key
+      ansible.builtin.command: kubeadm certs certificate-key
+      register: kube_cert
+      when: kube_cert is not defined
+
+    - name: Set cert as fact
+      ansible.builtin.set_fact:
+        kube_cert: "{{ kube_cert.stdout }}"
+
+    - name: Add kubeadm config
+      ansible.builtin.template:
+        src: kubeadm-config.yaml.j2
+        dest: /tmp/kubeadm-config.yaml
+        mode: '1777'
+
+- name: Install k8s with kubeadm
+  block:
+    - name: Initiate k8s
+      ansible.builtin.command: kubeadm init --config /tmp/kubeadm-config.yaml --upload-certs
+      register: kube_init
+      when: kube_init is not defined
+      failed_when: "'ERROR' in kube_init.stderr"
+
+    - name: Get information on generated certificate
+      ansible.builtin.openssl_certificate_info:
+        path: /etc/kubernetes/pki/ca.crt
+      register: cert
+
+    - name: Set cert hash as fact
+      ansible.builtin.set_fact:
+        kube_hash: "sha256:{{ cert.public_key_fingerprints.sha256 | replace(':', '') }}"
+
+    - name: Create kube directory
+      ansible.builtin.file:
+        path: "/home/{{ user }}/.kube"
+        state: directory
+        mode: '1777'
+
+    - name: Copy kubeconfig
+      ansible.builtin.copy:
+        src: /etc/kubernetes/admin.conf
+        dest: "/home/{{ user }}/.kube/config"
+        remote_src: true
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_id }}"
+        mode: '1777'
+
+    - name: Extract kubeconfig file
+      ansible.builtin.slurp:
+        src: /etc/kubernetes/admin.conf
+      register: kube_config
+
+    - name: Set config as fact
+      ansible.builtin.set_fact:
+        kube_config: "{{ kube_config['content'] | b64decode }}"
+
+    - name: Save the config file locally
+      delegate_to: localhost
+      become: true
+      ansible.builtin.template:
+        src: kubectl_conf.j2
+        dest: "{{ playbook_dir }}/kubectl_conf"

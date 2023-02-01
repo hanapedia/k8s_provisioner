@@ -1,0 +1,7 @@
+libcontainers_repo: deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/ /
+libcontainers_key: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/Release.key
+libcontainers_keyring: /etc/apt/trusted.gpg.d/libcontainers.gpg
+crio_repo: deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{ vars["k8s"]["version"] }}/xUbuntu_20.04/ /
+crio_key: https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:/{{ vars["k8s"]["version"] }}/xUbuntu_20.04/Release.key
+crio_keyring: /etc/apt/trusted.gpg.d/libcontainers-cri-o.gpg
+

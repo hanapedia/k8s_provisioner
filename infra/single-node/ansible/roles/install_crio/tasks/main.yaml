@@ -1,0 +1,71 @@
+# vim: set filetype=yaml.ansible :
+---
+- name: Install cri-o
+  block:
+    - name: Add crio repo key
+      ansible.builtin.apt_key:
+        url: "{{ item.key }}"
+        keyring: "{{ item.keyring }}"
+        state: present
+      loop:
+        - key: "{{ crio.libcontainers_key }}"
+          keyring: "{{ crio.libcontainers_keyring }}"
+        - key: "{{ crio.key }}"
+          keyring: "{{ crio.keyring }}"
+
+    - name: Ensure the presence of apt-repo for cri-o
+      ansible.builtin.apt_repository:
+        repo: "{{ item.repo }}"
+        filename: "{{ item.file }}"
+        state: present
+      loop:
+        - repo: "{{ crio.libcontainers_repo }}"
+          file: /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
+        - repo: "{{ crio.repo }}"
+          file: /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:1.26.list
+
+    - name: Ensure cri-o is installed - Ubuntu
+      ansible.builtin.apt:
+        name:
+          - criu
+          - libyajl2
+          - cri-o
+          - cri-tools
+          # - cri-o-runc
+          # - containernetworking-plugins         
+        state: present
+
+    - name: Install crun
+      ansible.builtin.include_role:
+        name: install_crun
+
+    - name: Fire crio-conf template
+      ansible.builtin.template:
+        src: crio.conf.j2
+        dest: /etc/crio/crio.conf
+        mode: 0755
+
+    - name: Fire crio-conf template
+      ansible.builtin.template:
+        src: crio.conf.crun.j2
+        dest: /etc/crio/crio.conf.d/01-crio-runc.conf
+        mode: 0755
+
+    - name: Remove example CNI configs
+      ansible.builtin.file:
+        path: "/etc/cni/net.d/{{ item }}"
+        state: absent
+      loop:
+        - 100-crio-bridge.conf
+        - 200-loopback.conf
+
+    - name: Force systemd to reread configs
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: Ensure cri-o is enabled and started
+      ansible.builtin.systemd:
+        name: crio
+        state: restarted 
+        enabled: true
+

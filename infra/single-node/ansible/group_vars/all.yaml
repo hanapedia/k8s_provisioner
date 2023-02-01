@@ -1,0 +1,3 @@
+user: hanapedia
+k8s:
+  version: '1.26'

@@ -1,0 +1,34 @@
+# vim: set filetype=yaml.ansible :
+---
+- name: Build and install crun
+  block:
+    - name: Install build dependencies
+      ansible.builtin.apt:
+        name:
+          - make 
+          - git 
+          - gcc 
+          - build-essential 
+          - pkgconf 
+          - libtool 
+          - libsystemd-dev 
+          - libprotobuf-c-dev 
+          - libcap-dev 
+          - libseccomp-dev
+          - libyajl-dev
+          - go-md2man
+          - libtool
+          - autoconf
+          - python3
+          - automake
+        state: present
+
+    - name: clone crun repo
+      ansible.builtin.git:
+        repo: 'https://github.com/containers/crun'
+        dest: "/home/{{ user }}/crun"
+
+    - name: run the build and isntallation script
+      ansible.builtin.script: 
+        cmd: install.sh
+        chdir: "/home/{{ user }}"

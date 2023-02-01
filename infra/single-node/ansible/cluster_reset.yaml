@@ -1,0 +1,9 @@
+# vim: set filetype=yaml.ansible :
+---
+- hosts: hanapediaserver
+  name: Reset kubernetes cluster on single node
+  become: true
+  tasks:
+    - name: reset k8s cluster
+      ansible.builtin.command: kubeadm reset -f
+      changed_when: true

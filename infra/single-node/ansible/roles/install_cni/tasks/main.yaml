@@ -1,0 +1,11 @@
+# vim: set filetype=yaml.ansible :
+---
+- name: Install Flannel
+  when: cni_plugin == 'flannel'
+  ansible.builtin.include_role:
+    name: install_flannel
+
+- name: Install Calico
+  when: cni_plugin == 'calico'
+  ansible.builtin.include_role:
+    name: install_flannel

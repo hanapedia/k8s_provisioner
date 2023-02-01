@@ -45,17 +45,7 @@ libvirt:
   ubuntu_base_img_url: "https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64.img"
   # kvm variant with limited kernel
   # ubuntu_base_img_url: "https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64-disk-kvm.img"
-
-cri: crio
-crio:
-  libcontainers_repo: deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/ /
-  libcontainers_key: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_20.04/Release.key
-  libcontainers_keyring: /etc/apt/trusted.gpg.d/libcontainers.gpg
-  crio_repo: deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{ vars["k8s"]["version"] }}/xUbuntu_20.04/ /
-  crio_key: https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:/{{ vars["k8s"]["version"] }}/xUbuntu_20.04/Release.key
-  crio_keyring: /etc/apt/trusted.gpg.d/libcontainers-cri-o.gpg
-
-
+  #
 # k8s varibales
 k8s:
   version: '1.26'

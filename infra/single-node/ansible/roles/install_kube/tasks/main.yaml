@@ -1,0 +1,44 @@
+# vim: set filetype=yaml.ansible :
+- name: Install Kube tools
+  block:
+    - name: Add google cloud reposiotry key
+      ansible.builtin.get_url:
+        url: "{{ k8s.repo_key }}"
+        dest: "{{ k8s.repo_key_dest }}"
+
+    - name: Add apt repository
+      ansible.builtin.apt_repository:
+        repo: "{{ k8s.repo }}"
+        filename: "{{ k8s.repo_file }}"
+        state: present
+
+    - name: Install k8s packages
+      ansible.builtin.apt:
+        name: "{{ k8s.packages }}"
+        state: present
+
+    - name: Ensure kubelet, kubeadm, kubectl are on hold
+      ansible.builtin.dpkg_selections:
+        name: "{{ item }}"
+        selection: hold
+      loop:
+        - kubectl
+        - kubeadm
+        - kubelet
+
+    - name: Disable swaps
+      ansible.builtin.command: swapoff -a
+      changed_when: true
+
+    - name: Remove swap entry from filesystem table
+      ansible.builtin.lineinfile:
+        line: "/dev/mapper/cl-swap swap"
+        path: /etc/fstab
+        state: absent
+
+    - name: Enable kubelet
+      ansible.builtin.systemd:
+        name: kubelet
+        state: started
+        enabled: true
+      notify: reboot
