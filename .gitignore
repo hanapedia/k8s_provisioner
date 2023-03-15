@@ -1,2 +1,7 @@
 /*Global .gitignore*/
 **/archived/
+**/example_app/src/**
+!**/example_app/src/go.Dockerfile
+!**/example_app/src/mongo.Dockerfile
+**/prometheus/operator/manifests/
+**/prometheus/operator/vendor/

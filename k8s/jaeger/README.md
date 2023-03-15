@@ -12,7 +12,6 @@ kubectl create -f https://github.com/jaegertracing/jaeger-operator/releases/down
 ```
 ## Deploy elasticsearch cluster as jaeger storage
 ```
-cd backend
 ansible-playbook enable_crio_capabilities.yaml
 kubectl apply -f backend/jaeger-backend-es-manifest.yaml -n observability
 ```
@@ -25,6 +24,5 @@ kubectl create secret generic jaeger-secret --from-literal=ES_PASSWORD=$ESPW --f
 ```
 apply jaeger manifest 
 ```
-cd ../
 kubectl apply -f jaeger-manifest.yaml -n observability
 ```
