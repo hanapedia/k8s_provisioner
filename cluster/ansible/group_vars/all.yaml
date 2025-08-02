@@ -42,7 +42,7 @@ vm_host:
 libvirt:
   uri: "qemu+ssh://hanapedia@ubuntuhome/system"
   # non-kvm ubuntu image
-  ubuntu_base_img_url: "https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64.img"
+  ubuntu_base_img_url: "https://cloud-images.ubuntu.com/releases/jammy/release/ubuntu-22.04-server-cloudimg-amd64.img"
   # kvm variant with limited kernel
   # ubuntu_base_img_url: "https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64-disk-kvm.img"
   #
